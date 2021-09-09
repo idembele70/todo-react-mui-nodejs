@@ -1,3 +1,4 @@
+#Front
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -21,3 +22,9 @@
 /client/npm-debug.log*
 /client/yarn-debug.log*
 /client/yarn-error.log*
+
+#Back
+/server/node_modules
+
+#Front & Back
+start*.sh
