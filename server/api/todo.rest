@@ -1,0 +1,22 @@
+
+
+//GET
+  // HOME PAGE
+GET http://localhost:4000
+###
+  //ALL Todo
+GET http://localhost:4000/todo/
+
+##############################
+
+//POST
+###
+POST http://localhost:4000/todo/new
+content-Type: application/json
+
+{
+  "name" : "task",
+  "details" : "homework, courses, call mom" 
+}
+
+

@@ -68,15 +68,30 @@ const useStyles = makeStyles({
 })
 function NewTodoForm() {
   const classes = useStyles()
+
+  // functions
+  const handleAddTodo = (data) => {
+    const headers = new Headers({
+      "content-type": "application/json"
+    })
+    fetch("http://localhost:4000/todo/new", {
+      method: "POST",
+      body: data,
+      headers
+    }).then(
+      res => console.log(res)
+    )
+      .catch(e => console.error("error while post fetching todo newTodoFrom jsx file", e))
+  }
   return (
-    <TodoForm>
+    <TodoForm onSubmit={handleAddTodo}>
       <Grid item xs={12}>
         <Button
           className={classes.validateBtn}
           type="submit"
           variant="outlined"
         >
-          <Typography variant="h5" className={classes.validateTextContent}>
+          <Typography variant="h5" onClick={handleAddTodo} className={classes.validateTextContent}>
             Save
           </Typography>
         </Button>

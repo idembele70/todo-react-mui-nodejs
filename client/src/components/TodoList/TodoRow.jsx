@@ -25,6 +25,10 @@ const useStyles = makeStyles({
 })
 export default function TodoRow() {
   const classes = useStyles()
+  const handleEdit = () => {
+    window.location.href = "/editTodoRow"
+  }
+
   return (
     <Box
       display="flex"
@@ -43,7 +47,13 @@ export default function TodoRow() {
           />
         }
       />
-      <Box pl="29px" pr="41px" width="calc(100% - 90px)">
+      <Box
+        pl="29px"
+        pr="41px"
+        width="calc(100% - 90px)"
+        style={{ cursor: "pointer" }}
+        onClick={handleEdit}
+      >
         <Typography variant="h5" className={classes.title}>
           Shopping
         </Typography>

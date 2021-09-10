@@ -8,8 +8,8 @@ import {
   Typography,
   withStyles
 } from "@material-ui/core"
-import PropTypes from "prop-types"
-import React from "react"
+import PropTypes, { object } from "prop-types"
+import React, { useState } from "react"
 import theme from "../theme"
 
 const CustomizedInput = withStyles({
@@ -57,8 +57,34 @@ const useStyles = makeStyles({
     margin: "auto"
   }
 })
-function TodoForm({ children, putSpaceBetween }) {
+function TodoForm({ children, onSubmit, putSpaceBetween, }) {
   const classes = useStyles()
+  const [name, setName] = useState("")
+  const [details, setDetails] = useState("")
+  const [error, setError] = useState("")
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    onSubmit([name, details])
+  }
+  
+
+  const handleChangeValue = (e) => {
+    switch (e.target.name) {
+      case "name":
+        setName(e.target.value)
+        setError("")
+        break
+      case "details":
+        setDetails(e.target.value)
+        setError("")
+        break
+      default:
+        console.error("invalid Name")
+        break
+    }
+  }
+
   return (
     <Grid
       container
@@ -66,7 +92,7 @@ function TodoForm({ children, putSpaceBetween }) {
       direction="column"
       className="container"
     >
-      <form>
+      <form onSubmit={handleSubmit}>
         <Grid item xs={12} className={classes.rootItem}>
           <FormControl>
             <InputLabel shrink htmlFor="name">
@@ -74,7 +100,13 @@ function TodoForm({ children, putSpaceBetween }) {
                 Name
               </Typography>
             </InputLabel>
-            <CustomizedInput placeholder="Enter the name" />
+            <CustomizedInput
+              id="name"
+              name="name"
+              onChange={handleChangeValue}
+              placeholder="Enter the name"
+              value={name}
+            />
           </FormControl>
         </Grid>
         <Grid item xs={12} className={classes.rootItem}>
@@ -86,17 +118,25 @@ function TodoForm({ children, putSpaceBetween }) {
             </InputLabel>
             <CustomizedInput
               id="details"
-              placeholder="Enter the details"
+              name="details"
+              onChange={handleChangeValue}
               multiline
               minRows={11}
+              placeholder="Enter the details"
+              value={details}
             />
           </FormControl>
         </Grid>
+        {error && (
+          <Grid item xs={12}>
+            {error}
+          </Grid>
+        )}
         <Grid
           item
           container
           xs={12}
-          justify={putSpaceBetween ? "space-between" : "center"}
+          justifyContent={putSpaceBetween ? "space-between" : "center"}
         >
           {children}
         </Grid>
@@ -106,7 +146,8 @@ function TodoForm({ children, putSpaceBetween }) {
 }
 
 TodoForm.propTypes = {
-  children: PropTypes.string.isRequired,
+  children: PropTypes.instanceOf(Object).isRequired,
+  onSubmit: PropTypes.func.isRequired,
   putSpaceBetween: PropTypes.bool
 }
 TodoForm.defaultProps = {
