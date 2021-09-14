@@ -10,7 +10,7 @@ GET http://localhost:4000/todo/
 ##############################
 
 //POST
-###
+### 
 POST http://localhost:4000/todo/new
 content-Type: application/json
 
@@ -19,4 +19,14 @@ content-Type: application/json
   "details" : "homework, courses, call mom" 
 }
 
+###
+// PUT
+PUT http://localhost:4000/todo/update/613e6ca51ad175cf0d4393c7
+Content-Type: application/json
+
+{
+  "isDone" : true
+}
+
+## PUT
 

@@ -57,14 +57,13 @@ const useStyles = makeStyles({
     margin: "auto"
   }
 })
-function TodoForm({ children, onSubmit, putSpaceBetween, }) {
+function TodoForm({ children, onSubmit, putSpaceBetween, error}) {
   const classes = useStyles()
   const [name, setName] = useState("")
   const [details, setDetails] = useState("")
-  const [error, setError] = useState("")
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault() 
     onSubmit([name, details])
   }
   
@@ -73,11 +72,9 @@ function TodoForm({ children, onSubmit, putSpaceBetween, }) {
     switch (e.target.name) {
       case "name":
         setName(e.target.value)
-        setError("")
         break
       case "details":
         setDetails(e.target.value)
-        setError("")
         break
       default:
         console.error("invalid Name")
@@ -129,7 +126,7 @@ function TodoForm({ children, onSubmit, putSpaceBetween, }) {
         </Grid>
         {error && (
           <Grid item xs={12}>
-            {error}
+            <Typography variant="h6" align="center" color="error">{error}</Typography>
           </Grid>
         )}
         <Grid
@@ -147,11 +144,13 @@ function TodoForm({ children, onSubmit, putSpaceBetween, }) {
 
 TodoForm.propTypes = {
   children: PropTypes.instanceOf(Object).isRequired,
+  error : PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   putSpaceBetween: PropTypes.bool
 }
 TodoForm.defaultProps = {
-  putSpaceBetween: false
+  putSpaceBetween: false,
+  error : ""
 }
 
 export default TodoForm

@@ -7,7 +7,11 @@ import {
 } from "@material-ui/core"
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
-import React from "react"
+import React, {
+  useEffect,
+  useState
+} from "react"
+import PropTypes from "prop-types"
 
 const useStyles = makeStyles({
   checkbox: {
@@ -23,12 +27,35 @@ const useStyles = makeStyles({
     margin: "0 0 9px 0"
   }
 })
-export default function TodoRow() {
+export default function TodoRow({ todo }) {
   const classes = useStyles()
+  const { details, _id: id, isDone, name } = todo
+  const [done, setDone] = useState(isDone)
   const handleEdit = () => {
-    window.location.href = "/editTodoRow"
+    window.location.href = `/editTodoRow/${id}`
+  }
+  const controller = new AbortController()
+  const { signal } = controller
+
+  const setDoneHandler = () => {
+    setDone(!done)
+    const body = JSON.stringify({ ...todo, isDone: !done })
+    fetch(`/todo/update/${id}`, {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body,
+      signal
+    }).then(
+      () => console.log("Todo Update succesfull")
+    )
+      .catch(e => console.error("Error while fetching method put todo in TodoRow jsx file :", e))
   }
 
+  useEffect(() => () => {
+    console.log("Unmount")  
+    controller.abort()
+  }
+    , [])
   return (
     <Box
       display="flex"
@@ -44,6 +71,8 @@ export default function TodoRow() {
             icon={<CheckCircleOutlineIcon fontSize="large" color="primary" />}
             checkedIcon={<CheckCircleIcon fontSize="large" color="primary" />}
             name="todoIcon"
+            checked={done}
+            onChange={setDoneHandler}
           />
         }
       />
@@ -55,12 +84,16 @@ export default function TodoRow() {
         onClick={handleEdit}
       >
         <Typography variant="h5" className={classes.title}>
-          Shopping
+          {name}
         </Typography>
         <Typography className={classes.details} variant="body1">
-          Milk, Eggs, Juice, sugar
+          {details}
         </Typography>
       </Box>
     </Box>
   )
+}
+
+TodoRow.propTypes = {
+  todo: PropTypes.instanceOf(Object).isRequired
 }

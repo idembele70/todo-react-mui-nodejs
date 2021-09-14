@@ -1,15 +1,9 @@
 import {
-  Grid,
-  InputBase,
-  withStyles,
-  alpha,
-  FormControl,
-  InputLabel,
-  makeStyles,
-  Typography,
-  Button
+  alpha, Button, Grid,
+  InputBase, makeStyles,
+  Typography, withStyles
 } from "@material-ui/core"
-import React from "react"
+import React, { useState } from "react"
 import theme from "../../theme"
 import TodoForm from "../../tools/TodoForm"
 
@@ -68,23 +62,30 @@ const useStyles = makeStyles({
 })
 function NewTodoForm() {
   const classes = useStyles()
-
+  const [error, setError] = useState("")
   // functions
-  const handleAddTodo = (data) => {
-    const headers = new Headers({
-      "content-type": "application/json"
-    })
-    fetch("http://localhost:4000/todo/new", {
+  const handleAddTodo = ([name, details]) => {
+    const body = JSON.stringify({ name, details })
+
+    fetch("/todo/new", {
       method: "POST",
-      body: data,
-      headers
+      headers: { "content-type": "application/json" },
+      body
     }).then(
-      res => console.log(res)
+      (res) => {
+        if (res.redirected){
+          window.location.href = res.url
+         return setError("")
+        }
+        return res.text().then(
+          errorMessage=>setError(errorMessage)
+        )
+      }
     )
       .catch(e => console.error("error while post fetching todo newTodoFrom jsx file", e))
   }
   return (
-    <TodoForm onSubmit={handleAddTodo}>
+    <TodoForm onSubmit={handleAddTodo} error={error}>
       <Grid item xs={12}>
         <Button
           className={classes.validateBtn}
