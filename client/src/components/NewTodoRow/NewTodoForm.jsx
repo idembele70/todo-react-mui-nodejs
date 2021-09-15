@@ -64,7 +64,7 @@ function NewTodoForm() {
   const classes = useStyles()
   const [error, setError] = useState("")
   // functions
-  const handleAddTodo = ([name, details]) => {
+  const onSubmit = ([name, details]) => {
     const body = JSON.stringify({ name, details })
 
     fetch("/todo/new", {
@@ -85,14 +85,14 @@ function NewTodoForm() {
       .catch(e => console.error("error while post fetching todo newTodoFrom jsx file", e))
   }
   return (
-    <TodoForm onSubmit={handleAddTodo} error={error}>
+    <TodoForm onSubmit={onSubmit} error={error}>
       <Grid item xs={12}>
         <Button
           className={classes.validateBtn}
           type="submit"
           variant="outlined"
         >
-          <Typography variant="h5" onClick={handleAddTodo} className={classes.validateTextContent}>
+          <Typography variant="h5" className={classes.validateTextContent}>
             Save
           </Typography>
         </Button>

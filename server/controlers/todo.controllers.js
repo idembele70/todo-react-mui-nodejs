@@ -1,12 +1,31 @@
 const Todo = require("../database/models/todo.model")
 
+//DELETE
+exports.deleteOneTodo = function (req, res) {
+  const { id } = req.params
+  Todo.findByIdAndDelete(id).exec()
+    .then(
+      () => res.send("Todo deleted")
+    )
+    .catch(
+      e => console.error("Error while deleting todo in todo controllers", e)
+    )
+}
 //GET
 exports.getAllTodo = function (req, res) {
   Todo.find({})
     .then(data => res.json(data))
-    .catch((e) => console.error("Todo not found in todo controllers", e))
+    .catch((e) => console.error("Todos not found in todo controllers", e))
 }
 
+exports.getOneTodo = function (req, res) {
+  const { id } = req.params
+  Todo.findById(id).exec()
+    .then(
+      todo => res.json(todo)
+    )
+    .catch(e => console.error("Error while Finding one todo in todo controllers", e))
+}
 //POST
 exports.addTodo = function (req, res) {
   const { name, details } = req.body
@@ -24,13 +43,13 @@ exports.addTodo = function (req, res) {
 }
 
 // PUT
-exports.updateTodo = async function (req, res) {
-  const { isDone } = req.body
+exports.updateTodo = function (req, res) {
+  const { isDone, name, details } = req.body
   const { id } = req.params
-    await Todo.findByIdAndUpdate(id, { isDone }).exec()
+  Todo.findByIdAndUpdate(id, { isDone, name, details }).exec()
     .then(
-      ()=>res.end("done !")
+      () => res.send("Todo updated")
     )
-    .catch(e=>res.send("Error while updating todo in Todo controllers file", e))
+    .catch(e => res.send("Error while updating todo in Todo controllers file", e))
 
 }

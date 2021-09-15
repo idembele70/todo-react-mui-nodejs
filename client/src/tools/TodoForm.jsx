@@ -9,7 +9,7 @@ import {
   withStyles
 } from "@material-ui/core"
 import PropTypes, { object } from "prop-types"
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import theme from "../theme"
 
 const CustomizedInput = withStyles({
@@ -57,17 +57,14 @@ const useStyles = makeStyles({
     margin: "auto"
   }
 })
-function TodoForm({ children, onSubmit, putSpaceBetween, error}) {
+function TodoForm({ children, onSubmit, putSpaceBetween, error, data }) {
   const classes = useStyles()
   const [name, setName] = useState("")
   const [details, setDetails] = useState("")
-
   const handleSubmit = (e) => {
-    e.preventDefault() 
+    e.preventDefault()
     onSubmit([name, details])
   }
-  
-
   const handleChangeValue = (e) => {
     switch (e.target.name) {
       case "name":
@@ -81,7 +78,10 @@ function TodoForm({ children, onSubmit, putSpaceBetween, error}) {
         break
     }
   }
-
+  useEffect(() => {
+    setName(data.name)
+    setDetails(data.details)
+  }, [data])
   return (
     <Grid
       container
@@ -102,7 +102,7 @@ function TodoForm({ children, onSubmit, putSpaceBetween, error}) {
               name="name"
               onChange={handleChangeValue}
               placeholder="Enter the name"
-              value={name}
+              value={name || ""}
             />
           </FormControl>
         </Grid>
@@ -120,13 +120,15 @@ function TodoForm({ children, onSubmit, putSpaceBetween, error}) {
               multiline
               minRows={11}
               placeholder="Enter the details"
-              value={details}
+              value={details || ""}
             />
           </FormControl>
         </Grid>
         {error && (
           <Grid item xs={12}>
-            <Typography variant="h6" align="center" color="error">{error}</Typography>
+            <Typography variant="h6" align="center" color="error">
+              {error}
+            </Typography>
           </Grid>
         )}
         <Grid
@@ -144,13 +146,16 @@ function TodoForm({ children, onSubmit, putSpaceBetween, error}) {
 
 TodoForm.propTypes = {
   children: PropTypes.instanceOf(Object).isRequired,
-  error : PropTypes.string,
-  onSubmit: PropTypes.func.isRequired,
+  data: PropTypes.instanceOf(Object),
+  error: PropTypes.string,
+  onSubmit: PropTypes.func,
   putSpaceBetween: PropTypes.bool
 }
 TodoForm.defaultProps = {
-  putSpaceBetween: false,
-  error : ""
+  data: { name: String, details: String },
+  error: "",
+  onSubmit: () => { },
+  putSpaceBetween: false
 }
 
 export default TodoForm

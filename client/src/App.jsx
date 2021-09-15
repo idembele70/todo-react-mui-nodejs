@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import Todolist from "./pages/Todolist"
 import NewTodoRow from "./pages/NewTodoRow"
@@ -6,13 +6,27 @@ import EditTodoRow from "./pages/EditTodoRow"
 import Header from "./tools/Header"
 
 function App() {
+  const [searchTerm, setSearchTerm] = useState("")
+  const onSearch = (value) => {
+    setSearchTerm(value)
+  }
+
   return (
     <Router>
-      <Header />
       <Switch>
-        <Route exact path="/" component={Todolist} />
-        <Route exact path="/newTodoRow" component={NewTodoRow} />
-        <Route exact path="/editTodoRow" component={EditTodoRow} />
+        <Route exact path="/">
+          <Header isHomeLocation onSearch={onSearch} />
+        </Route>
+        <Route path="/todo/">
+          <Header isHomeLocation={false} />
+        </Route>
+      </Switch>
+      <Switch>
+        <Route exact path="/">
+          <Todolist searchTerm={searchTerm} />
+        </Route>
+        <Route exact path="/todo/new" component={NewTodoRow} />
+        <Route path="/todo/update/:id" component={EditTodoRow} />
       </Switch>
     </Router>
   )

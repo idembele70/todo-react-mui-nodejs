@@ -6,11 +6,14 @@ GET http://localhost:4000
 ###
   //ALL Todo
 GET http://localhost:4000/todo/
+###
+  //ONE Todo
+GET http://localhost:4000/todo/613e19c836c7dfadfde11f9d
 
 ##############################
 
 //POST
-### 
+### ADD TODO
 POST http://localhost:4000/todo/new
 content-Type: application/json
 

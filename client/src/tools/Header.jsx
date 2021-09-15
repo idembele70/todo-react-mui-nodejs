@@ -1,14 +1,16 @@
-import React from "react"
 import {
+  Box,
   Button,
   FormControl,
   Grid,
   Input,
   makeStyles,
-  Typography,
-  Box
+  Typography
 } from "@material-ui/core"
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos"
+import PropTypes from "prop-types"
+import React, { useState } from "react"
+import { useHistory } from "react-router"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,11 +61,13 @@ const useStyles = makeStyles((theme) => ({
     }
   }
 }))
-export default function Header() {
+export default function Header({ isHomeLocation, onSearch }) {
   const classes = useStyles()
-  const isHomeLocation = window.location.href.split("/").slice(-1)[0] === ""
-  const handleGoToHome = () => {
-    window.location.href = "/"
+  const history = useHistory()
+  const [searchTerm, setSearchTerm] = useState("")
+  const handleSubmitSearch = (e) => {
+    e.preventDefault()
+    onSearch(searchTerm)
   }
 
   return (
@@ -75,10 +79,17 @@ export default function Header() {
       </Grid>
       {isHomeLocation && (
         <Grid item className={classes.searchBar}>
-          <form>
+          <form onSubmit={handleSubmitSearch}>
             <FormControl className={classes.searchBarForm}>
-              <Input placeholder="Search" className={classes.searchBarInput} />
-              <Button className={classes.searchBarBtn}>Search</Button>
+              <Input
+                placeholder="Search"
+                value={searchTerm}
+                onChange={(e)=>setSearchTerm(e.target.value)}
+                className={classes.searchBarInput}
+              />
+              <Button type="submit" className={classes.searchBarBtn}>
+                Search
+              </Button>
             </FormControl>
           </form>
         </Grid>
@@ -97,11 +108,19 @@ export default function Header() {
           <ArrowBackIosIcon
             color="secondary"
             fontSize="large"
-            onClick={handleGoToHome}
+            onClick={() => history.push("/")}
             className={classes.BackIosIcons}
           />
         </Box>
       )}
     </Grid>
   )
+}
+
+Header.propTypes = {
+  isHomeLocation: PropTypes.bool.isRequired,
+  onSearch: PropTypes.func
+}
+Header.defaultProps = {
+  onSearch: () => {}
 }

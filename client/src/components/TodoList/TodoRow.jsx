@@ -5,13 +5,10 @@ import {
   makeStyles,
   Typography
 } from "@material-ui/core"
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
-import React, {
-  useEffect,
-  useState
-} from "react"
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
 import PropTypes from "prop-types"
+import React, { useEffect, useState } from "react"
 
 const useStyles = makeStyles({
   checkbox: {
@@ -30,9 +27,9 @@ const useStyles = makeStyles({
 export default function TodoRow({ todo }) {
   const classes = useStyles()
   const { details, _id: id, isDone, name } = todo
-  const [done, setDone] = useState(isDone)
+  const [done, setDone] = useState(isDone || false)
   const handleEdit = () => {
-    window.location.href = `/editTodoRow/${id}`
+    window.location = `/todo/update/${id}`
   }
   const controller = new AbortController()
   const { signal } = controller
@@ -45,17 +42,20 @@ export default function TodoRow({ todo }) {
       headers: { "content-type": "application/json" },
       body,
       signal
-    }).then(
-      () => console.log("Todo Update succesfull")
-    )
-      .catch(e => console.error("Error while fetching method put todo in TodoRow jsx file :", e))
+    })
+      .then(() => "Todo sat done !")
+      .catch((e) => {
+        if (e.name !== "AbortError")
+          console.error(
+            "Error while fetching method put todo in TodoRow jsx file :",
+            e
+          )
+      })
   }
 
   useEffect(() => () => {
-    console.log("Unmount")  
     controller.abort()
-  }
-    , [])
+  })
   return (
     <Box
       display="flex"
