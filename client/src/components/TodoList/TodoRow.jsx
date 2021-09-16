@@ -29,7 +29,7 @@ export default function TodoRow({ todo }) {
   const { details, _id: id, isDone, name } = todo
   const [done, setDone] = useState(isDone || false)
   const handleEdit = () => {
-    window.location = `/todo/update/${id}`
+    window.location = `/todo/client/update/${id}`
   }
   const controller = new AbortController()
   const { signal } = controller

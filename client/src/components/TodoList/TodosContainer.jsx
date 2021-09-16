@@ -48,7 +48,7 @@ export default function TodosContainer({ searchTerm }) {
     setLoading(true)
     const controller = new AbortController()
     const { signal } = controller
-    fetch("/todo", { signal })
+    fetch("https://todo-react-nodejs.herokuapp.com/todo", { signal })
       .then((res) => res.json())
       .then(async (data) => {
         await setTodos(
@@ -71,16 +71,9 @@ export default function TodosContainer({ searchTerm }) {
       })
     return () => controller.abort()
   }, [searchTerm, todos.length])
-  if (loading)
-    return (
-      <CenteredCircularProgress />
-    )
+  if (loading) return <CenteredCircularProgress />
   return (
-    <Grid
-      container
-      justifyContent="flex-start"
-      className={classes.root}
-    >
+    <Grid container justifyContent="flex-start" className={classes.root}>
       {todos.length
         ? todos.map((todo) => {
           const { _id: id } = todo
@@ -105,7 +98,11 @@ export default function TodosContainer({ searchTerm }) {
             transform: "translateX(280px)"
           }}
         >
-          <Button className={classes.addBtn} href="/todo/new" color="secondary">
+          <Button
+            className={classes.addBtn}
+            href="/todo/client/new"
+            color="secondary"
+          >
             <AddIcon className={classes.addIcon} />
           </Button>
         </Box>

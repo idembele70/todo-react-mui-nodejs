@@ -17,7 +17,7 @@ function App() {
         <Route exact path="/">
           <Header isHomeLocation onSearch={onSearch} />
         </Route>
-        <Route path="/todo/">
+        <Route path="/todo/client">
           <Header isHomeLocation={false} />
         </Route>
       </Switch>
@@ -25,8 +25,8 @@ function App() {
         <Route exact path="/">
           <Todolist searchTerm={searchTerm} />
         </Route>
-        <Route exact path="/todo/new" component={NewTodoRow} />
-        <Route path="/todo/update/:id" component={EditTodoRow} />
+        <Route exact path="/todo/client/new" component={NewTodoRow} />
+        <Route path="/todo/client/update/:id" component={EditTodoRow} />
       </Switch>
     </Router>
   )
